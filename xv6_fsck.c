@@ -140,7 +140,7 @@ for(i= 0;i< sb->ninodes; i++){
 
 		}
 
-		//checking for the validity of direct and indirect address ( 0 or < st.size) 
+		//checking for the validity of direct and indirect address 
 		for(j = 0 ; j <= 12 ; j++)
 		{
 			if(j != 12) { 
@@ -149,6 +149,7 @@ for(i= 0;i< sb->ninodes; i++){
 					close(fd);
 					exit(1);
 				}
+				//direct addresses used and marked free in bitmap 
 				if(id->addrs[j] != 0 ){
 					uint b = id->addrs[j];
 					char *bblk_addr = (char *)(img_ptr + BBLOCK(b,sb->ninodes)*BSIZE);
@@ -171,6 +172,7 @@ for(i= 0;i< sb->ninodes; i++){
 						close(fd);
 						exit(1);
 					}
+					//indirect addresses used and marked free in bitmap
 					if(*indir_addr != 0 ){
 						uint b = *indir_addr;
 						char *bblk_addr = (char *)(img_ptr + BBLOCK(b,sb->ninodes)*BSIZE);
