@@ -149,6 +149,17 @@ for(i= 0;i< sb->ninodes; i++){
 					close(fd);
 					exit(1);
 				}
+				if(id->addrs[j] != 0 ){
+					uint b = id->addrs[j];
+					char *bblk_addr = (char *)(img_ptr + BBLOCK(b,sb->ninodes)*BSIZE);
+					uint bi = b%BPB;
+					int m = 1 << (bi%8);
+					if((bblk_addr[bi/8] & m) == 0){
+						fprintf(stderr, "ERROR: address used by inode but marked free in bitmap.\n");
+						close(fd);
+						exit(1);
+					}
+				}
 			}
 			else{
 				indir_addr = (id->addrs[j] != 0)? (uint *)(img_ptr + id->addrs[j]*BSIZE): 0;
@@ -160,7 +171,17 @@ for(i= 0;i< sb->ninodes; i++){
 						close(fd);
 						exit(1);
 					}
-
+					if(*indir_addr != 0 ){
+						uint b = *indir_addr;
+						char *bblk_addr = (char *)(img_ptr + BBLOCK(b,sb->ninodes)*BSIZE);
+						uint bi = b%BPB;
+						int m = 1 << (bi%8);
+						if((bblk_addr[bi/8] & m) == 0){
+							fprintf(stderr, "ERROR: address used by inode but marked free in bitmap.\n");
+							close(fd);
+							exit(1);
+						}
+					}
 					indir_addr++; 
 				}
 			} 
