@@ -226,6 +226,20 @@ for(i= 0;i< sb->ninodes; i++){
 							close(fd);
 							exit(1);
 						}
+							
+						if(id->type == 1) {	
+							curr_dir = (struct dirent *)(img_ptr + (*indir_addr)*BSIZE);
+							for(l= 0 ; l< 32 ; l++){
+								if((strcmp(curr_dir->name,".") != 0) && (strcmp(curr_dir->name, "..") != 0))
+									ddir_ref_count[i][curr_dir->inum]++;
+								
+								file_ref_dir_count[curr_dir->inum]++;
+								ref_dir[curr_dir->inum] = 1;
+								curr_dir++;
+							}
+						}
+						
+							
 					}
 					indir_addr++; 
 				}
@@ -240,7 +254,6 @@ for(i= 0;i< sb->ninodes; i++){
 	id++;
 }
 
-printf("BIT:%lu", BBLOCK(0,sb->ninodes));
 for(int x=1 ; x < sb->ninodes ;x++){
 	
 	if((file_ref_link[x] != 0) && (file_ref_link[x] != file_ref_dir_count[x])){
