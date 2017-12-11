@@ -199,7 +199,8 @@ for(i= 0;i< sb->ninodes; i++){
 					}
 				}
 			}
-			else{
+			else{	
+				if(used_address[id->addrs[j]] == 0) used_address[id->addrs[j]] = 1;
 				indir_addr = (id->addrs[j] != 0)? (uint *)(img_ptr + id->addrs[j]*BSIZE): 0;
 				if(indir_addr != 0)
 				for( k= 0 ; k< 128 ; k++){
@@ -294,18 +295,16 @@ for(int x=1; x < sb->ninodes ; x++) {
 }
 
 
-/*
+
 char *bblk_addr = (char *) (img_ptr + BBLOCK(0,sb->ninodes)*BSIZE);
 for(int bi = 0 ; bi < sb->size ; bi++) {
 	int m = 1 << (bi % 8);
-//	printf("block : %d , bitmap val : %d , used_address val : %d  \n", bi, bblk_addr[bi/8] & m , used_address[bi]);
 	if(((bblk_addr[bi/8] & m) != 0) && (used_address[bi] == 0 )) {
 		fprintf(stderr, "ERROR: bitmap marks block in use but it is not in use.\n");
 		close(fd);
 		exit(1);
 	} 
 }
-*/
 
 return 0;
 
